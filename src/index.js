@@ -22,17 +22,18 @@ class PolygonApp extends HTMLElement {
 
     this.controls.addEventListener("clear", () => this.clear());
 
-    this.controls.addEventListener("selectFirstPoint", () =>
-      this.polygonArea.startSelectingPoint("first")
-    );
+    this.controls.addEventListener("selectFirstPoint", () => {
+      this.polygonArea.startSelectingPoint("first");
+    });
 
-    this.controls.addEventListener("selectSecondPoint", () =>
-      this.polygonArea.startSelectingPoint("second")
-    );
+    this.controls.addEventListener("selectSecondPoint", () => {
+      this.polygonArea.startSelectingPoint("second");
+    });
 
     this.controls.addEventListener("toggleDirection", () => {
       this.polygonArea.togglePathDirection();
       this.controls.setOrderButtonText(this.polygonArea.clockwise);
+      this.controls.updatePath(this.polygonArea.pathPoints);
     });
 
     this.controls.addEventListener("savePolygon", () =>
@@ -55,10 +56,15 @@ class PolygonApp extends HTMLElement {
     this.polygonArea.addEventListener("pointsSelected", (e) => {
       this.controls.setSelectedPoints(e.detail.first, e.detail.second);
     });
+
+    this.polygonArea.addEventListener("pathPointsUpdated", (e) => {
+      this.controls.updatePath(e.detail.pathPoints);
+    });
   }
 
   clear() {
     this.polygonArea.clear();
+    this.controls.updatePath([]);
     this.controls.setPointCount(0);
   }
 

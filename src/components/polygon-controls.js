@@ -65,6 +65,14 @@ class PolygonControls extends HTMLElement {
     this.orderBtn.textContent = clockwise ? "clockwise" : "counterclockwise";
   }
 
+  updatePath(pathPoints) {
+    const pathText =
+      pathPoints.length > 0
+        ? `Path: ${pathPoints.map((p) => p.name).join(" -> ")}`
+        : "";
+    this.shadow.querySelector("#path-text").textContent = pathText;
+  }
+
   render() {
     this.shadow.innerHTML = `
         <style>
@@ -113,6 +121,7 @@ class PolygonControls extends HTMLElement {
           <button id="load">load from localStorage</button>
           <button id="delete">delete from localStorage</button>
           <button id="clear">Clear</button>
+          <p id="path-text"></p>
         </div>
       `;
   }

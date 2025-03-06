@@ -3,6 +3,8 @@ class PolygonArea extends HTMLElement {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
     this.points = [];
+    this.pathPoints = [];
+    this.pointIndex = 0;
     this.polygonDrawn = false;
     this.isCreatingPoints = false;
     this.selectingPoint = null;
@@ -38,11 +40,13 @@ class PolygonArea extends HTMLElement {
     const y = event.clientY - rect.top;
 
     if (this.points.length < 15) {
-      this.points.push({ x, y });
+      this.points.push({ x, y, name: `P${this.pointIndex + 1}` });
       this.renderCanvas();
       this.dispatchEvent(
         new CustomEvent("pointAdded", { detail: this.points })
       );
+
+      this.pointIndex += 1;
     }
   }
 
@@ -87,6 +91,11 @@ class PolygonArea extends HTMLElement {
 
       if (this.firstPoint !== null && this.secondPoint !== null) {
         this.renderCanvas();
+        this.dispatchEvent(
+          new CustomEvent("pathPointsUpdated", {
+            detail: { pathPoints: this.pathPoints },
+          })
+        );
       }
     }
 
@@ -100,6 +109,8 @@ class PolygonArea extends HTMLElement {
 
   clear() {
     this.points = [];
+    this.pathPoints = [];
+    this.pointIndex = 0;
     this.polygonDrawn = false;
     this.isCreatingPoints = false;
     this.firstPoint = null;
@@ -132,6 +143,8 @@ class PolygonArea extends HTMLElement {
       this.renderCanvas();
 
       alert("Полигон загружен из localStorage!");
+    } else {
+      alert("Полигон не найден в localStorage!");
     }
   }
 
@@ -140,6 +153,8 @@ class PolygonArea extends HTMLElement {
     if (saved) {
       localStorage.removeItem("polygon");
       alert("Полигон удален из localStorage!");
+    } else {
+      alert("Полигон не найден в localStorage!");
     }
   }
 
@@ -174,14 +189,12 @@ class PolygonArea extends HTMLElement {
       let index1 = this.firstPoint;
       let index2 = this.secondPoint;
 
-      let pathPoints = [];
-
       if (this.clockwise) {
         // Двигаемся по часовой стрелке
         if (index1 < index2) {
-          pathPoints = this.points.slice(index1, index2 + 1);
+          this.pathPoints = this.points.slice(index1, index2 + 1);
         } else {
-          pathPoints = [
+          this.pathPoints = [
             ...this.points.slice(index1),
             ...this.points.slice(0, index2 + 1),
           ];
@@ -189,9 +202,9 @@ class PolygonArea extends HTMLElement {
       } else {
         // Двигаемся против часовой стрелки
         if (index1 > index2) {
-          pathPoints = this.points.slice(index2, index1 + 1).reverse();
+          this.pathPoints = this.points.slice(index2, index1 + 1).reverse();
         } else {
-          pathPoints = [
+          this.pathPoints = [
             ...this.points.slice(index2),
             ...this.points.slice(0, index1 + 1),
           ].reverse();
@@ -199,8 +212,8 @@ class PolygonArea extends HTMLElement {
       }
 
       // Рисуем путь через рёбра
-      this.ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-      pathPoints.forEach((p) => this.ctx.lineTo(p.x, p.y));
+      this.ctx.moveTo(this.pathPoints[0].x, this.pathPoints[0].y);
+      this.pathPoints.forEach((p) => this.ctx.lineTo(p.x, p.y));
 
       this.ctx.stroke();
     }
