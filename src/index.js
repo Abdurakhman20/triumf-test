@@ -30,9 +30,10 @@ class PolygonApp extends HTMLElement {
       this.polygonArea.startSelectingPoint("second")
     );
 
-    this.controls.addEventListener("toggleDirection", () =>
-      this.polygonArea.togglePathDirection()
-    );
+    this.controls.addEventListener("toggleDirection", () => {
+      this.polygonArea.togglePathDirection();
+      this.controls.setOrderButtonText(this.polygonArea.clockwise);
+    });
 
     this.polygonArea.addEventListener("pointAdded", (e) => {
       this.controls.setPointCount(e.detail.length);

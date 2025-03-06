@@ -49,6 +49,10 @@ class PolygonControls extends HTMLElement {
       second !== null ? `P${second + 1}` : "Not selected";
   }
 
+  setOrderButtonText(clockwise) {
+    this.orderBtn.textContent = clockwise ? "clockwise" : "counterclockwise";
+  }
+
   render() {
     this.shadow.innerHTML = `
         <style>
@@ -85,7 +89,7 @@ class PolygonControls extends HTMLElement {
             <button id="secondPoint">Second point</button>
             <span id="secondPointLabel" class="label">Not selected</span>
           </div>
-          <button id="clockwise-order">Clockwise order</button>
+          <button id="clockwise-order">clockwise</button>
           <button id="clear">Clear</button>
         </div>
       `;
