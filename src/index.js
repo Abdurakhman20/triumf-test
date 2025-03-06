@@ -35,6 +35,19 @@ class PolygonApp extends HTMLElement {
       this.controls.setOrderButtonText(this.polygonArea.clockwise);
     });
 
+    this.controls.addEventListener("savePolygon", () =>
+      this.polygonArea.savePolygon()
+    );
+
+    this.controls.addEventListener("loadPolygon", () => {
+      this.polygonArea.loadPolygon();
+      this.controls.setPointCount(this.polygonArea.points.length);
+    });
+
+    this.controls.addEventListener("deletePolygon", () =>
+      this.polygonArea.deletePolygon()
+    );
+
     this.polygonArea.addEventListener("pointAdded", (e) => {
       this.controls.setPointCount(e.detail.length);
     });

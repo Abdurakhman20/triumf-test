@@ -115,6 +115,34 @@ class PolygonArea extends HTMLElement {
     );
   }
 
+  savePolygon() {
+    if (!this.points.length) {
+      alert("Создайте полигон, чтобы его сохранить!");
+      return;
+    }
+    localStorage.setItem("polygon", JSON.stringify(this.points));
+    alert("Полигон сохранен в localStorage!");
+  }
+
+  loadPolygon() {
+    const saved = JSON.parse(localStorage.getItem("polygon"));
+    if (saved) {
+      this.points = saved;
+      this.polygonDrawn = true;
+      this.renderCanvas();
+
+      alert("Полигон загружен из localStorage!");
+    }
+  }
+
+  deletePolygon() {
+    const saved = JSON.parse(localStorage.getItem("polygon"));
+    if (saved) {
+      localStorage.removeItem("polygon");
+      alert("Полигон удален из localStorage!");
+    }
+  }
+
   renderCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

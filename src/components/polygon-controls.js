@@ -14,6 +14,9 @@ class PolygonControls extends HTMLElement {
     this.orderBtn = this.shadow.querySelector("#clockwise-order");
     this.firstPointLabel = this.shadow.querySelector("#firstPointLabel");
     this.secondPointLabel = this.shadow.querySelector("#secondPointLabel");
+    this.saveBtn = this.shadow.querySelector("#save");
+    this.deleteBtn = this.shadow.querySelector("#delete");
+    this.loadBtn = this.shadow.querySelector("#load");
 
     this.createPointsBtn.addEventListener("click", () =>
       this.dispatchEvent(new Event("createPoints"))
@@ -32,6 +35,15 @@ class PolygonControls extends HTMLElement {
     );
     this.orderBtn.addEventListener("click", () =>
       this.dispatchEvent(new Event("toggleDirection"))
+    );
+    this.saveBtn.addEventListener("click", () =>
+      this.dispatchEvent(new Event("savePolygon"))
+    );
+    this.loadBtn.addEventListener("click", () =>
+      this.dispatchEvent(new Event("loadPolygon"))
+    );
+    this.deleteBtn.addEventListener("click", () =>
+      this.dispatchEvent(new Event("deletePolygon"))
     );
   }
 
@@ -74,7 +86,10 @@ class PolygonControls extends HTMLElement {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            width: 50%;
+          }
+          .path-container-box {
+            display: flex;
+            gap: 10px;
           }
           .label { font-size: 14px; color: blue; }
         </style>
@@ -84,12 +99,19 @@ class PolygonControls extends HTMLElement {
           <button id="drawPolygon" disabled>Draw polygon</button>
           <span class="text">Create Path</span>
           <div class="path-container">
-            <button id="firstPoint">First point</button>
-            <span id="firstPointLabel" class="label">Not selected</span>
-            <button id="secondPoint">Second point</button>
-            <span id="secondPointLabel" class="label">Not selected</span>
+            <div class="path-container-box">
+              <button id="firstPoint">First point</button>
+              <span id="firstPointLabel" class="label">Not selected</span>
+            </div>
+            <div class="path-container-box">
+              <button id="secondPoint">Second point</button>
+              <span id="secondPointLabel" class="label">Not selected</span>
+            </div>
           </div>
           <button id="clockwise-order">clockwise</button>
+          <button id="save">save to localStorage</button>
+          <button id="load">load from localStorage</button>
+          <button id="delete">delete from localStorage</button>
           <button id="clear">Clear</button>
         </div>
       `;
