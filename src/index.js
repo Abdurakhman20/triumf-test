@@ -19,10 +19,27 @@ class PolygonApp extends HTMLElement {
     this.controls.addEventListener("drawPolygon", () =>
       this.polygonArea.drawPolygon()
     );
+
     this.controls.addEventListener("clear", () => this.clear());
+
+    this.controls.addEventListener("selectFirstPoint", () =>
+      this.polygonArea.startSelectingPoint("first")
+    );
+
+    this.controls.addEventListener("selectSecondPoint", () =>
+      this.polygonArea.startSelectingPoint("second")
+    );
+
+    this.controls.addEventListener("toggleDirection", () =>
+      this.polygonArea.togglePathDirection()
+    );
 
     this.polygonArea.addEventListener("pointAdded", (e) => {
       this.controls.setPointCount(e.detail.length);
+    });
+
+    this.polygonArea.addEventListener("pointsSelected", (e) => {
+      this.controls.setSelectedPoints(e.detail.first, e.detail.second);
     });
   }
 
@@ -41,26 +58,19 @@ class PolygonApp extends HTMLElement {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background-color:#afafaf;
-          padding: 10px;
+          padding: 30px;
           border: 2px solid #000;
-          color: #fff;
         }
         .content {
           display: flex; 
           justify-content: center;
           gap: 20px;
         }
-        .title {
-          font-size: 28px;
-        }
-        
         polygon-controls {
           width: 250px;
         }
       </style>
       <div class="container">
-        <h1 class="title">Полигон</h1>
         <div class="content">
           <polygon-area></polygon-area>
           <polygon-controls></polygon-controls>
